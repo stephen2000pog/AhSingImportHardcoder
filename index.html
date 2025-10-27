@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Commerce</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #ffffff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header / Navigation */
+        header {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #3b82f6;
+        }
+        
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background: #3b82f6;
+            border-radius: 1px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem 0;
+            background: #f9fafb;
+        }
+
+        .hero-img-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            position: relative;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 2;
+            width: 90%;
+            max-width: 600px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-overlay h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-overlay p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+        
+        .cta-button {
+            background: #ffffff;
+            color: #3b82f6;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .cta-button.primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .cta-button.primary:hover {
+            background: #2563eb;
+        }
+        
+        /* Sections */
+        .section {
+            padding: 4rem 0;
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section.hero-section {
+            padding: 0;
+        }
+        
+        /* Info Cards (Accueil) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .info-card {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .info-card i {
+            font-size: 2.5rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+        
+        .info-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+        
+        .info-card p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        /* Products */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            background: #f3f4f6;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            color: #6b7280;
+        }
+        
+        .filter-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .filter-btn:hover:not(.active) {
+            background: #e5e7eb;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f3f4f6;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-image {
+    width: 100%;
+    height: 240px;
+    object-fit: contain; /* Changé de 'cover' à 'contain' */
+    background-color: #f9fafb; /* Ajout d'un fond pour combler l'espace vide */
+}
+        
+        .product-info {
+            padding: 1.5rem;
+        }
+        
+        .product-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .contact-info {
+            background: #f9fafb;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .contact-info p, .contact-info div {
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info p:last-child, .contact-info div:last-child {
+            margin-bottom: 0;
+        }
+        
+        .hours-display {
+            white-space: normal;
+        }
+
+        .hours-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .hours-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hours-list li:last-child {
+            border-bottom: none;
+        }
+
+        .hours-day {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .hours-time {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        /* Hours in footer */
+        footer .hours-list li {
+            border-bottom: 1px solid #374151;
+        }
+
+        footer .hours-day {
+            color: #f9fafb;
+        }
+
+        footer .hours-time {
+            color: #60a5fa;
+        }
+        
+        /* Footer */
+        footer {
+            background: #1f2937;
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #9ca3af;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9ca3af;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .hero-overlay h1 {
+                font-size: 2rem;
+            }
+
+            .hero-overlay p {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        
+        /* Utilities */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .text-success { color: #10b981; }
+        .text-error { color: #ef4444; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 1rem; }
+    </style>
+</head>
+<body x-data="merchantApp()">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-container">
+                <div class="logo-container">
+                    <div class="logo-text" x-text="businessInfo.name"></div>
+                </div>
+                <button class="mobile-menu-btn" @click="mobileMenuOpen = !mobileMenuOpen">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links" :class="mobileMenuOpen && 'active'">
+                    <li><a href="#" @click="showPage('accueil')" :class="currentPage === 'accueil' && 'active'">Accueil</a></li>
+                    <li><a href="#" @click="showPage('catalogue')" :class="currentPage === 'catalogue' && 'active'">Produits</a></li>
+                    <li><a href="#" @click="showPage('contact')" :class="currentPage === 'contact' && 'active'">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Page Accueil -->
+        <div class="section" :class="currentPage === 'accueil' && 'active'">
+            <!-- Hero Section -->
+            <div class="hero">
+                <div class="hero-img-wrapper">
+                    <img src="images/AhSingImport.png" alt="AhSing Import" class="hero-img">
+                    <div class="hero-overlay">
+                        <h1 x-text="businessInfo.name"></h1>
+                        <p x-text="businessInfo.description"></p>
+                        <a href="#" class="cta-button" @click="showPage('catalogue')">Voir le catalogue</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Info Section -->
+            <div class="container">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Horaires d'ouverture</h3>
+                        <ul class="hours-list">
+                            <template x-for="hour in businessInfo.hoursList" :key="hour.day">
+                                <li>
+                                    <span class="hours-day" x-text="hour.day"></span>
+                                    <span class="hours-time" x-text="hour.time"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Notre adresse</h3>
+                        <p x-text="businessInfo.address"></p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-phone"></i>
+                        <h3>Nous contacter</h3>
+                        <p x-text="businessInfo.phone"></p>
+                        <p x-text="businessInfo.email"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Catalogue / Produits -->
+        <div class="section" :class="currentPage === 'catalogue' && 'active'">
+            <div class="container">
+                <h2 class="section-title">Notre Catalogue</h2>
+                <p class="section-subtitle">Découvrez notre sélection de produits de qualité</p>
+                
+                <div class="filters">
+                    <button class="filter-btn" :class="selectedCategory === 'all' && 'active'" @click="selectedCategory = 'all'">Tous les produits</button>
+                    <template x-for="category in categories" :key="category">
+                        <button class="filter-btn" :class="selectedCategory === category && 'active'" @click="selectedCategory = category" x-text="category"></button>
+                    </template>
+                </div>
+                
+                <div class="products-grid">
+                    <template x-for="product in filteredProducts" :key="product.id">
+                        <div class="product-card">
+                            <img :src="product.image" :alt="product.name" class="product-image">
+                            <div class="product-info">
+                                <div class="product-name" x-text="product.name"></div>
+                                <div class="product-description" x-text="product.description"></div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Contact -->
+<div class="section" :class="currentPage === 'contact' && 'active'">
+    <div class="container">
+        <h2 class="section-title">Nous Contacter</h2>
+        <p class="section-subtitle">Retrouvez toutes nos coordonnées ci-dessous</p>
+        
+        <div style="max-width: 600px; margin: 0 auto;">
+            <div class="contact-info">
+                <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Informations de contact</h3>
+                <div>
+                    <p>
+                        <strong style="color: #1f2937;">Adresse :</strong><br>
+                        <span x-text="businessInfo.address"></span>
+                    </p>
+                    <p>
+                        <strong style="color: #1f2937;">Téléphone :</strong><br>
+                        <a :href="'tel:' + businessInfo.phone.replace(/\s/g, '')" style="color: #3b82f6; text-decoration: none;">
+                            <span x-text="businessInfo.phone"></span>
+                        </a>
+                    </p>
+                    <p>
+                        <strong style="color: #1f2937;">Email :</strong><br>
+                        <a :href="'mailto:' + businessInfo.email" style="color: #3b82f6; text-decoration: none;">
+                            <span x-text="businessInfo.email"></span>
+                        </a>
+                    </p>
+                    <div>
+                        <strong style="color: #1f2937;">Horaires d'ouverture :</strong><br>
+                        <ul class="hours-list" style="margin-top: 0.5rem;">
+                            <template x-for="hour in businessInfo.hoursList" :key="hour.day">
+                                <li>
+                                    <span class="hours-day" x-text="hour.day"></span>
+                                    <span class="hours-time" x-text="hour.time"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p x-text="businessInfo.address"></p>
+                    <p x-text="businessInfo.phone"></p>
+                    <p x-text="businessInfo.email"></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Horaires</h3>
+                    <ul class="hours-list">
+                        <template x-for="hour in businessInfo.hoursList" :key="hour.day">
+                            <li>
+                                <span class="hours-day" x-text="hour.day"></span>
+                                <span class="hours-time" x-text="hour.time"></span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Suivez-nous</h3>
+                    <p>
+                        <a :href="businessInfo.facebook" target="_blank">
+                            <i class="fab fa-facebook" style="margin-right: 0.5rem; color: #1877f2;"></i>Facebook
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 <span x-text="businessInfo.name"></span>. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function merchantApp() {
+            return {
+                // Navigation
+                currentPage: 'accueil',
+                mobileMenuOpen: false,
+                
+                // Business Data (statique)
+                businessInfo: {
+                    name: 'AhSing Import',
+                    description: 'Grossiste alimentaire à Tahiti - Livraison dans les îles',
+                    address: 'PK 3.150, Arue c/mer',
+                    phone: '+689 40 50 99 00',
+                    email: 'stephen.le.dragon.24@gmail.com',
+                    hoursList: [
+                        { day: 'Lundi', time: '7h - 11h15 • 13h - 16h15' },
+                        { day: 'Mardi', time: '7h - 11h15 • 13h - 16h15' },
+                        { day: 'Mercredi', time: '7h - 11h15 • 13h - 16h15' },
+                        { day: 'Jeudi', time: '7h - 11h15 • 13h - 16h15' },
+                        { day: 'Vendredi', time: '7h - 11h15 • 13h - 15h30' },
+                        { day: 'Samedi', time: 'Fermé' },
+                        { day: 'Dimanche', time: 'Fermé' }
+                    ],
+                    facebook: 'https://www.facebook.com/profile.php?id=100067983164414#',
+                },
+                
+                // Products (statique)
+                products: [
+  // BISCUITS COSTA
+  { id: 5, name: 'Frac Choco - Costa', description: '110g - Pack de 36', category: 'Biscuits', image: 'images/produits/frac choco.jpg' },
+  { id: 6, name: 'Frac Vanille - Costa', description: '110g - Pack de 36', category: 'Biscuits', image: 'images/produits/frac vanilla_.jpg' },
+  { id: 7, name: 'Frac Clasica - Costa', description: '110g - Pack de 36', category: 'Biscuits', image: 'images/produits/frac_clasica.png' },
+  { id: 8, name: 'Frac Bicolor - Costa', description: '110g - Pack de 36', category: 'Biscuits', image: 'images/produits/frac bicolor.png' },
+  { id: 9, name: 'Tuareg - Costa', description: '115g - Pack de 35', category: 'Biscuits', image: 'images/produits/tuareg.png' },
+  { id: 10, name: 'Din Don - Costa', description: '115g - Pack de 35', category: 'Biscuits', image: 'images/produits/dindon.png' },
+  { id: 11, name: 'Donuts Choco - Costa', description: '100g - Pack de 24', category: 'Biscuits', image: 'images/produits/donuts_choco.png' },
+  { id: 12, name: 'Donuts Blanco - Costa', description: '100g - Pack de 24', category: 'Biscuits', image: 'images/produits/donuts_blanco.png' },
+  { id: 13, name: 'Gretel Choco - Costa', description: '100g - Pack de 24', category: 'Biscuits', image: 'images/produits/gretel_choco.jpg' },
+  { id: 14, name: 'Nik Fraise - Costa', description: '70g - Pack de 36', category: 'Biscuits', image: 'images/produits/nik_fraise.webp' },
+  { id: 15, name: 'Nik Bocado - Costa', description: '70g - Pack de 36', category: 'Biscuits', image: 'images/produits/nik_bocado.jpg' },
+  
+  // BISCUITS LOACKER
+  { id: 16, name: 'Gaufrettes Cacao 90g - Loacker', description: '90g - 12 paquets', category: 'Biscuits', image: 'images/produits/gaufrettes_cacao.png' },
+  { id: 17, name: 'Gaufrettes Napolitaine 90g - Loacker', description: '90g - 12 paquets', category: 'Biscuits', image: 'images/produits/gaufrettes_napolitaine.png' },
+  { id: 18, name: 'Gaufrettes Cacao 45g - Loacker', description: '45g - 18 barres x 4 paquets', category: 'Biscuits', image: 'images/produits/gaufrettes_cacao4.jpg' },
+  { id: 19, name: 'Gaufrettes Napolitaine 45g - Loacker', description: '45g - 18 barres x 4 paquets', category: 'Biscuits', image: 'images/produits/gaufrette_napolitaine4.webp' },
+  { id: 20, name: 'Gaufrettes Cacao 175g - Loacker', description: '175g - Pack de 18', category: 'Biscuits', image: 'images/produits/gaufrettes_cacao_classic.jpg' },
+  { id: 21, name: 'Gaufrettes Napolitaine 175g - Loacker', description: '175g - Pack de 18', category: 'Biscuits', image: 'images/produits/gaufrettes_napo_classic.png' },
+  { id: 22, name: 'Gaufrettes Vanille 175g - Loacker', description: '175g - Pack de 18', category: 'Biscuits', image: 'images/produits/gaufrettes_vanille_classic.png' },
+  { id: 23, name: 'Quadratini Napolitaine - Loacker', description: '300g - Pack de 18', category: 'Biscuits', image: 'images/produits/quadratini_napo.png' },
+  { id: 24, name: 'Quadratini Chocolat - Loacker', description: '300g - Pack de 18', category: 'Biscuits', image: 'images/produits/quadratini_choco.png' },
+  { id: 25, name: 'Quadratini Dark Choco - Loacker', description: '300g - Pack de 18', category: 'Biscuits', image: 'images/produits/quadratini_dark_choco.png' },
+  { id: 26, name: 'Quadratini Cocoa Milk - Loacker', description: '250g - Pack de 18', category: 'Biscuits', image: 'images/produits/quadratini_cocoa_milk.png' },
+  { id: 27, name: 'Quadratini Cappuccino - Loacker', description: '250g - Pack de 18', category: 'Biscuits', image: 'images/produits/quadratini_cappuccino.png' },
+  { id: 28, name: 'Quadratini Tiramisu - Loacker', description: '250g - Pack de 18', category: 'Biscuits', image: 'images/produits/quadratini_tiramisu.png' },
+  
+  // BONBONS JAKE
+  { id: 29, name: 'Jelly Mania Worms - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA.webp' },
+  { id: 30, name: 'Jelly Mania Strawberries - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/Jelly Mania Strawberries - Jake.jpg' },
+  { id: 31, name: 'Jelly Mania Cola Bottles - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_cola.webp' },
+  { id: 32, name: 'Jelly Mania Classic Mix - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_classic.webp' },
+  { id: 33, name: 'Jelly Mania Kisses - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_kisses.jpg' },
+  { id: 34, name: 'Jelly Mania Peach Hearts - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_hearts.webp' },
+  { id: 35, name: 'Jelly Mania Bananas - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_banana.jpg' },
+  { id: 36, name: 'Jelly Mania Water Melons - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_watermelons.jpg' },
+  { id: 37, name: 'Jelly Mania Teeth - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_teeth.jpg' },
+  { id: 38, name: 'Jelly Mania Fingers - Jake', description: '100g - Pack de 18', category: 'Bonbons', image: 'images/produits/JELLY MANIA_fingers.jpg' },
+  
+  // BONBONS CHINOIS
+  { id: 43, name: 'Bonbon Chinois - Yu Shan', description: '100g - Pack de 150', category: 'Bonbons', image: 'images/produits/bb_ch.png' },
+  { id: 44, name: 'Poudre - Yu Shan', description: '100g - Pack de 150', category: 'Bonbons', image: 'images/produits/poudre_yu.webp' },
+  { id: 45, name: 'BB Chinois Blanc avec graine - Eagle', description: '100g - Pack de 100', category: 'Bonbons', image: 'images/produits/bb_chb.jpg' },
+  { id: 46, name: 'BB Chinois Blanc sans graine - Eagle', description: '100g - Pack de 100', category: 'Bonbons', image: 'images/produits/bb_chb.jpg' },
+  { id: 47, name: 'BB Chinois Rouge avec graine - Eagle', description: '100g - Pack de 100', category: 'Bonbons', image: 'images/produits/bb_chr.jpg' },
+  { id: 48, name: 'BB Chinois Rouge sans graine - Eagle', description: '100g - Pack de 100', category: 'Bonbons', image: 'images/produits/bb_chr.jpg' },
+  { id: 49, name: 'Seedless Moi - Eagle', description: '300g - Pack de 80', category: 'Bonbons', image: 'images/produits/seedless_moi.webp' },
+  { id: 50, name: 'BB Chinois Men Chong', description: '400g - Pack de 30', category: 'Bonbons', image: 'images/produits/red_sweet_prune.png' },
+  { id: 51, name: 'Peche Rouge - Oriental', description: '500g - Pack de 30', category: 'Bonbons', image: 'images/produits/peche_rouge.png' },
+  { id: 52, name: 'Tamarin - Ego', description: '120g - 10 sacs x 10 paquets', category: 'Bonbons', image: 'images/produits/crunchy_peach.png' },
+  
+  // CONFISERIES
+  { id: 53, name: 'Menthe Fraiche - Verquin', description: '125g - Pack de 12', category: 'Confiseries', image: 'images/produits/menthe_verquin.jpg' },
+  { id: 54, name: 'Acidulé Fruits - Verquin', description: '125g - Pack de 12', category: 'Confiseries', image: 'images/produits/acidule_verquin.jfif' },
+  { id: 55, name: 'Air Fruit - Verquin', description: '125g - Pack de 12', category: 'Confiseries', image: 'images/produits/air_fruit_verquin.jpg' },
+  { id: 56, name: 'Menthe Fraiche - Verquin', description: '2kg - Pack de 6 sacs', category: 'Confiseries', image: 'images/produits/menthe_verquin_2kg.jpg' },
+  { id: 57, name: 'Acidulé Fruits - Verquin', description: '2kg - Pack de 6 sacs', category: 'Confiseries', image: 'images/produits/acidule_2kg.jpg' },
+  { id: 58, name: 'Air Fruits - Verquin', description: '2kg - Pack de 6 sacs', category: 'Confiseries', image: 'images/produits/air_fruits_2kg.jpg' },
+  { id: 59, name: 'Caramel Dur - Dupont dIsigny', description: '2kg - Pack de 6 sacs', category: 'Confiseries', image: 'images/produits/caramel_dur.jpg' },
+  { id: 60, name: 'Sucette Plate Cuore Rouge - Yaketas', description: '100g - Pack de 8', category: 'Confiseries', image: 'images/produits/sucettes-coeurs-rouges.webp' },
+  { id: 61, name: 'Sucette Frutti Pop - Jake', description: '1400g - Pack de 8', category: 'Confiseries', image: 'images/produits/sucettes-frutti-pops-jake.webp' },
+  { id: 62, name: 'Tiffany Deluxe Toffee - Tiffany', description: '700g - Pack de 12', category: 'Confiseries', image: 'images/produits/tiffany-deluxe.png' },
+  
+  // CONFISERIES DUBBLE BUBBLE
+  { id: 63, name: 'Gum Melon - Dubble Bubble', description: '1 BT x 200 PCS', category: 'Confiseries', image: 'images/produits/gum_melon.jpg' },
+  { id: 64, name: 'Gum Watermelon - Dubble Bubble', description: '1 BT x 200 PCS', category: 'Confiseries', image: 'images/produits/gum_watermelon.webp' },
+  { id: 65, name: 'Blister 16 billes - Asba', description: '1 BOITE X 40 REGLETTES', category: 'Confiseries', image: 'images/produits/asba.jpg' },
+  { id: 66, name: 'Mega Tattoo - Dubble Bubble', description: '1 CRT x 12 BTS x 24 sachets', category: 'Confiseries', image: 'images/produits/mega_tatoo.webp' },
+  { id: 67, name: 'Dubu Beach Tattoo Bubble Gum - Dubble Bubble', description: '1 CRT x 12 BTS x 200 sachets', category: 'Confiseries', image: 'images/produits/beach_tatoo.jpg' },
+  { id: 68, name: 'Fun Stickers - Dubble Bubble', description: '192g - 1 CRT x 12 BTS x 24 sachets', category: 'Confiseries', image: 'images/produits/fun_sticker.png' },
+  
+  // MEGA JUMBO
+  { id: 69, name: 'Mega Jumbo Duo Cerise-Cola', description: '100g - Pack de 6 boîtes', category: 'Confiseries', image: 'images/produits/jumbo_duo.png' },
+  { id: 70, name: 'Mega Jumbo Fraise', description: '100g - Pack de 6 boîtes', category: 'Confiseries', image: 'images/produits/jumbo_fraise.png' },
+  { id: 71, name: 'Mega Jumbo Raisin', description: '100g - Pack de 6 boîtes', category: 'Confiseries', image: 'images/produits/jumbo_raisin.png' },
+  { id: 72, name: 'Tache la Langue', description: '100g - Pack de 6 boîtes', category: 'Confiseries', image: 'images/produits/tache_langue.png' },
+  
+  // CONSERVES AUTRES
+  { id: 73, name: 'Chicken Luncheon Meat - Dany', description: '200g - 48 x 200g', category: 'Conserves', image: 'images/produits/luncheon_200.jpg' },
+  { id: 74, name: 'Chicken Luncheon Meat - Dany', description: '340g - 24 x 340g', category: 'Conserves', image: 'images/produits/luncheon_340.jpg' },
+  { id: 75, name: 'Chicken Vienna Sausage - Dany', description: '227g - 24 x 227g', category: 'Conserves', image: 'images/produits/vienna.jpg' },
+  { id: 76, name: 'Chicken Cocktail Sausage - Dany', description: '227g - 24 x 227g', category: 'Conserves', image: 'images/produits/cocktail.jpg' },
+  { id: 77, name: 'Three Men Luncheon Meat - Robert', description: '200g - 48 x 200g', category: 'Conserves', image: 'images/produits/three_men.jpg' },
+  { id: 78, name: 'Three Men Luncheon Meat - Robert', description: '340g - 24 x 340g', category: 'Conserves', image: 'images/produits/three_men.jpg' },
+  
+  // CONSERVES PÂTES
+  { id: 79, name: 'Pate de Foie - Ranou', description: '80g - 16 packs x 3 BTS', category: 'Conserves', image: 'images/produits/pate_foie.webp' },
+  { id: 80, name: 'Pate Campagnes - Ranou', description: '80g - 16 packs x 3 BTS', category: 'Conserves', image: 'images/produits/pate_campagne.jpg' },
+  { id: 81, name: 'Pate Jambon - Ranou', description: '75g - 16 packs x 3 BTS', category: 'Conserves', image: 'images/produits/pate_jambon.png' },
+  { id: 82, name: 'Pate Rillettes - Ranou', description: '75g - 16 packs x 3 BTS', category: 'Conserves', image: 'images/produits/pate_rillettes.png' },
+  
+  // DIVERS CHOCOLATS
+  { id: 83, name: 'Kit Kat', description: '41.5g - 415g 24 PQTS x 10', category: 'Chocolats', image: 'images/produits/kit-ka.jpg' },
+  { id: 84, name: 'Kit Kat Chunky', description: '160g - 20 PQTS x 4', category: 'Chocolats', image: 'images/produits/kit-kat-chunky.jpg' },
+  { id: 85, name: 'Hello Panda - Meiji', description: '50g - 8 PQTS x 10 BTS', category: 'Chocolats', image: 'images/produits/hello-panda.jpg' },
+  
+  // PAPIERS ET BRIQUETS
+  { id: 86, name: 'Briquets - Djeep', description: '1 paquet de 16', category: 'Papier et Briquets', image: 'images/produits/djeep.png' },
+  { id: 87, name: 'Papiers Blanc - Elephant', description: '90 feuilles - 1 boîte de 400', category: 'Papier et Briquets', image: 'images/produits/elephant.png' },
+  { id: 88, name: 'Papiers Blanc - Elephant', description: '90 feuilles - 1 PQT x 100', category: 'Papier et Briquets', image: 'images/produits/elephant.png' },
+  { id: 89, name: 'Papiers Blanc - Elephant', description: '90 feuilles - 1 PQT x 50', category: 'Papier et Briquets', image: 'images/produits/elephant.png' },
+  
+  // PRODUITS PPN
+  //{ id: 90, name: 'Farine avec levure - Punjas (Star)', description: '1kg - 1 CRT x 20 PQTS', category: 'PPN', image: 'images/produits/' },
+  //{ id: 91, name: 'Farine sans levure - Punjas (Star)', description: '1kg - 1 CRT x 20 PQTS', category: 'PPN', image: 'images/produits/' },
+{ id: 92, name: 'Maquereaux à l’huile - Star', description: '425g - 1 CRT x 24 BTS', category: 'PPN', image: 'images/produits/star.png' },
+{ id: 93, name: 'Lentilles - Cookquick', description: '454g - 1 CRT x 24 PQTS', category: 'PPN', image: 'images/produits/cookquick.png' },
+{ id: 94, name: 'Haricots rouges - Cookquick', description: '454g - 1 CRT x 24 PQTS', category: 'PPN', image: 'images/produits/hr.png' },
+{ id: 95, name: 'Haricots blancs - Cookquick', description: '454g - 1 CRT x 24 PQTS', category: 'PPN', image: 'images/produits/hb.png' },
+
+// RAYON DIVERS
+{ id: 96, name: 'Carte à jouer', description: '1 boîte de 12 cartes', category: 'Divers', image: 'images/produits/cartes.webp' },
+{ id: 97, name: 'Billes à jouer', description: '1 lot de 10 sacs de 25 pcs', category: 'Divers', image: 'images/produits/billes.png' },
+{ id: 98, name: 'Allumettes ménage', description: '4 PQT de 30 BTES', category: 'Divers', image: 'images/produits/um.webp' },
+{ id: 99, name: 'Allumette Union Match', description: '10 PQT de 100 BTES', category: 'Divers', image: 'images/produits/um1.webp' },
+
+// SNACK FOOD
+{ id: 100, name: 'Rota - Oriental', description: '60g x 6 sacs x 10 PQTS', category: 'Snack Food', image: 'images/produits/rota.webp' },
+{ id: 101, name: 'Super Ring - Oriental', description: '60g x 6 sacs x 10 PQTS', category: 'Snack Food', image: 'images/produits/superring.png' },
+{ id: 102, name: 'Twisties Cheese', description: '65g x 6 sacs x 10 PQTS', category: 'Snack Food', image: 'images/produits/TWISTIES CHEESE TWISTIES.jpg' },
+{ id: 103, name: 'Twisties Chicken Cheese Ball', description: '60g x 6 sacs x 10 PQTS', category: 'Snack Food', image: 'images/produits/TWISTIES CHICKEN.jpg' },
+
+// TABACS DIVERS
+  { id: 110, name: 'Davidoff', description: '1 CTN X 25 cartouches X 10', category: 'Tabacs', image: 'images/produits/davidoff.png' },
+  { id: 111, name: 'Royale Menthol', description: 'Vert / Blanc - 1 CTN X 25 cartouches X 10', category: 'Tabacs', image: 'images/produits/royale_menthol.png' },
+  { id: 112, name: 'Royale Balto KS Red', description: '1 CTN X 25 cartouches X 10', category: 'Tabacs', image: 'images/produits/royale_balto.png' },
+  { id: 113, name: 'Royale Balto KS Menthol', description: 'Vert foncé - 1 CTN X 25 cartouches X 10', category: 'Tabacs', image: 'images/produits/royale_menthol.png' },
+{ id: 104, name: 'Bison', description: '30g - 1 CTN X 30 cartouches X 5', category: 'Tabacs', image: 'images/produits/bison.png' },
+{ id: 105, name: 'Pall Mall Vert', description: '30g - 1 CTN X 30 cartouches X 5', category: 'Tabacs', image: 'images/produits/pall_mall.png' },
+{ id: 106, name: 'Riverstone Brun', description: '30g - 1 CTN X 12 cartouches X 10', category: 'Tabacs', image: 'images/produits/riverstone.png' },
+{ id: 107, name: 'Royale Vert', description: '30g - 1 CTN X 12 cartouches X 10', category: 'Tabacs', image: 'images/produits/royale_vert.png' },
+{ id: 108, name: 'Taho', description: '30g - 1 CTN X 12 cartouches X 10', category: 'Tabacs', image: 'images/produits/taho.png' },
+{ id: 109, name: 'Royale Rouge', description: '30g - 1 CTN X 12 cartouches X 10', category: 'Tabacs', image: 'images/produits/royaleProuge.png' },
+
+// ANIMALERIES
+  { id: 114, name: 'Ferry Chiens - Boulettes au Boeuf', description: 'Ferry 1250g - Pack de 12 boîtes', category: 'Animaleries', image: 'images/produits/Ferry-Beef-1.png' },
+  { id: 115, name: 'Ferry Chiens - Boulettes au Poulet', description: 'Ferry 1250g - Pack de 12 boîtes', category: 'Animaleries', image: 'images/produits/Ferry-Chicken-1.png' },
+  { id: 116, name: 'Croquettes Boeuf - Master Dog', description: '9kg', category: 'Animaleries', image: 'images/produits/croquette_boeuf.png' },
+  { id: 117, name: 'Croquettes Poulet - Master Dog', description: '9kg', category: 'Animaleries', image: 'images/produits/croquette_poulet.png' },
+                ],
+
+                selectedCategory: 'all',
+                
+                init() {
+                    // Initialisation
+                },
+                
+                // Navigation
+                showPage(page) {
+                    this.currentPage = page;
+                    this.mobileMenuOpen = false;
+                },
+                
+                // Products
+                get categories() {
+                    return [...new Set(this.products.map(p => p.category))];
+                },
+                
+                get filteredProducts() {
+                    if (this.selectedCategory === 'all') return this.products;
+                    return this.products.filter(p => p.category === this.selectedCategory);
+                },
+                
+                // Contact
+                sendMessage() {
+                    // Créer le sujet
+                    let subject;
+                    if (this.contactForm.subject && this.contactForm.subject.trim() !== '') {
+                        subject = encodeURIComponent(this.contactForm.subject);
+                    } else {
+                        subject = encodeURIComponent('Nouveau message de ' + this.contactForm.name + ' via le site web');
+                    }
+                    
+                    // Créer le corps du message
+                    const body = encodeURIComponent(
+                        'Nom: ' + this.contactForm.name + '\n\n' +
+                        'Message:\n' + this.contactForm.message
+                    );
+                    
+                    // Ouvrir le client mail
+                    window.location.href = `mailto:${this.businessInfo.email}?subject=${subject}&body=${body}`;
+                    
+                    // Réinitialiser le formulaire
+                    this.contactForm = { name: '', subject: '', message: '' };
+                    
+                    // Message de confirmation
+                    alert('Votre client mail va s\'ouvrir pour envoyer le message.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
