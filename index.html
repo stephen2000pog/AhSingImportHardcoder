@@ -140,17 +140,38 @@
         }
 
         .hero-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: white;
-            z-index: 2;
-            width: 90%;
-            max-width: 600px;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-        }
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    z-index: 2;
+    width: 90%;
+    max-width: 600px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 768px) {
+    .hero-overlay {
+        top: 60%;
+    }
+    
+    .hero-overlay h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-overlay p {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .cta-button {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+}
 
         .hero-overlay h1 {
             font-size: 3.5rem;
@@ -782,6 +803,7 @@
   // DIVERS CHOCOLATS
   { id: 83, name: 'Kit Kat', description: '41.5g - 415g 24 PQTS x 10', category: 'Chocolats', image: 'images/produits/kit-ka.jpg' },
   { id: 84, name: 'Kit Kat Chunky', description: '160g - 20 PQTS x 4', category: 'Chocolats', image: 'images/produits/kit-kat-chunky.jpg' },
+  { id: 84.5, name: "Kisses - Hershey’s", description: "150g - Pack de 12", category: "Chocolats", image: "images/produits/kisses-hersheys.jpg" },
   { id: 85, name: 'Hello Panda - Meiji', description: '50g - 8 PQTS x 10 BTS', category: 'Chocolats', image: 'images/produits/hello-panda.jpg' },
   
   // PAPIERS ET BRIQUETS
@@ -791,8 +813,8 @@
   { id: 89, name: 'Papiers Blanc - Elephant', description: '90 feuilles - 1 PQT x 50', category: 'Papier et Briquets', image: 'images/produits/elephant.png' },
   
   // PRODUITS PPN
-  //{ id: 90, name: 'Farine avec levure - Punjas (Star)', description: '1kg - 1 CRT x 20 PQTS', category: 'PPN', image: 'images/produits/' },
-  //{ id: 91, name: 'Farine sans levure - Punjas (Star)', description: '1kg - 1 CRT x 20 PQTS', category: 'PPN', image: 'images/produits/' },
+  { id: 90, name: 'Farine avec levure - Punjas (Star)', description: '1kg - 1 CRT x 20 PQTS', category: 'PPN', image: 'images/produits/farine_rouge.png' },
+  { id: 91, name: 'Farine sans levure - Punjas (Star)', description: '1kg - 1 CRT x 20 PQTS', category: 'PPN', image: 'images/produits/farine_bleue.png' },
 { id: 92, name: 'Maquereaux à l’huile - Star', description: '425g - 1 CRT x 24 BTS', category: 'PPN', image: 'images/produits/star.png' },
 { id: 93, name: 'Lentilles - Cookquick', description: '454g - 1 CRT x 24 PQTS', category: 'PPN', image: 'images/produits/cookquick.png' },
 { id: 94, name: 'Haricots rouges - Cookquick', description: '454g - 1 CRT x 24 PQTS', category: 'PPN', image: 'images/produits/hr.png' },
